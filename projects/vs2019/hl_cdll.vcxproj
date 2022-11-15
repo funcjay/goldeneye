@@ -43,16 +43,16 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <TargetName>client</TargetName>
-    <IntDir>$(SolutionDir)$(Configuration)\\$(ProjectName)\int\</IntDir>
+    <IntDir>$(SolutionDir)..\..\..\_int\client\</IntDir>
     <EnableClangTidyCodeAnalysis>true</EnableClangTidyCodeAnalysis>
-    <OutDir>$(SolutionDir)$(Configuration)\\$(ProjectName)\</OutDir>
+    <OutDir>$(SolutionDir)..\..\..\cl_dlls\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <TargetName>client</TargetName>
-    <IntDir>$(SolutionDir)$(Configuration)\\$(ProjectName)\int\</IntDir>
+    <IntDir>$(SolutionDir)..\..\..\_int\client\</IntDir>
     <EnableClangTidyCodeAnalysis>true</EnableClangTidyCodeAnalysis>
-    <OutDir>$(SolutionDir)$(Configuration)\\$(ProjectName)\</OutDir>
+    <OutDir>$(SolutionDir)..\..\..\cl_dlls\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -76,9 +76,10 @@
       </BaseAddress>
     </Link>
     <PostBuildEvent>
-      <Command>cmd /c ""$(ProjectDir)..\..\filecopy.bat" "$(OutDir)" "cl_dlls" "$(TargetFileName)""
-cmd /c ""$(ProjectDir)..\..\filecopy.bat" "$(OutDir)" "cl_dlls" "$(TargetName).pdb""</Command>
-      <Message>Installing client files</Message>
+      <Command>
+      </Command>
+      <Message>
+      </Message>
     </PostBuildEvent>
     <PostBuildEvent />
   </ItemDefinitionGroup>
@@ -108,9 +109,10 @@ cmd /c ""$(ProjectDir)..\..\filecopy.bat" "$(OutDir)" "cl_dlls" "$(TargetName).p
       </BaseAddress>
     </Link>
     <PostBuildEvent>
-      <Command>cmd /c ""$(ProjectDir)..\..\filecopy.bat" "$(OutDir)" "cl_dlls" "$(TargetFileName)""
-cmd /c ""$(ProjectDir)..\..\filecopy.bat" "$(OutDir)" "cl_dlls" "$(TargetName).pdb""</Command>
-      <Message>Installing client files</Message>
+      <Command>
+      </Command>
+      <Message>
+      </Message>
     </PostBuildEvent>
     <PostBuildEvent />
   </ItemDefinitionGroup>

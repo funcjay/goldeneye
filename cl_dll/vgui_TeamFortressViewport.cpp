@@ -1369,7 +1369,7 @@ CMenuPanel* TeamFortressViewport::CreateTextWindow(int iTextToShow)
 	if (iTextToShow == SHOW_MOTD)
 	{
 		if (!m_szServerName || '\0' == m_szServerName[0])
-			strcpy(cTitle, "Half-Life");
+			strcpy(cTitle, "Goldeneye: 98");
 		else
 			strncpy(cTitle, m_szServerName, sizeof(cTitle));
 		cTitle[sizeof(cTitle) - 1] = 0;
