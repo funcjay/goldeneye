@@ -187,7 +187,7 @@ EV_MuzzleFlash
 Flag weapon/view model for muzzle flash
 =================
 */
-void EV_MuzzleFlash()
+void EV_MuzzleFlash(bool smoke, float smokeSize)
 {
 	// Add muzzle flash to current weapon model
 	cl_entity_t* ent = GetViewEntity();
@@ -198,4 +198,13 @@ void EV_MuzzleFlash()
 
 	// Or in the muzzle flash
 	ent->curstate.effects |= EF_MUZZLEFLASH;
+
+	if (smoke)
+	{
+		int smokeModel = gEngfuncs.pEventAPI->EV_FindModelIndex("sprites/gunsmoke.spr");
+		Vector smokeOrigin;
+		VectorCopy(ent->attachment[0], smokeOrigin);
+
+		gEngfuncs.pEfxAPI->R_TempSprite(smokeOrigin, Vector(0.0f, 0.0f, 0.0f), smokeSize, smokeModel, kRenderTransAdd, 0, 0.35f, 1.0f, FTENT_SPRANIMATE);
+	}
 }

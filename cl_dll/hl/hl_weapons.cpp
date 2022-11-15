@@ -517,6 +517,7 @@ void HUD_WeaponsPostThink(local_state_s* from, local_state_s* to, usercmd_t* cmd
 	CBasePlayerWeapon* pCurrent;
 	weapon_data_t nulldata, *pfrom, *pto;
 	static int lasthealth;
+	static CBasePlayerWeapon* lastweapon;
 
 	memset(&nulldata, 0, sizeof(nulldata));
 
@@ -607,6 +608,11 @@ void HUD_WeaponsPostThink(local_state_s* from, local_state_s* to, usercmd_t* cmd
 		}
 
 		lasthealth = to->client.health;
+
+		if (lastweapon != NULL && pWeapon != NULL && pWeapon != lastweapon)
+			lastweapon->Holster();
+
+		lastweapon = pWeapon;
 	}
 
 	// We are not predicting the current weapon, just bow out here.
