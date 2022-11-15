@@ -156,12 +156,6 @@
     <ClCompile Include="..\..\dlls\h_battery.cpp">
       <Filter>Source Files\dlls</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\dlls\h_cine.cpp">
-      <Filter>Source Files\dlls</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\dlls\h_cycler.cpp">
-      <Filter>Source Files\dlls</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\dlls\h_export.cpp">
       <Filter>Source Files\dlls</Filter>
     </ClCompile>
@@ -309,9 +303,6 @@
     <ClCompile Include="..\..\dlls\teamplay_gamerules.cpp">
       <Filter>Source Files\dlls</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\dlls\tempmonster.cpp">
-      <Filter>Source Files\dlls</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\dlls\tentacle.cpp">
       <Filter>Source Files\dlls</Filter>
     </ClCompile>
@@ -365,6 +356,12 @@
     </ClCompile>
     <ClCompile Include="..\..\public\interface.cpp">
       <Filter>Source Files\public</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dlls\CEnvModel.cpp">
+      <Filter>Source Files\dlls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dlls\CEnvMusic.cpp">
+      <Filter>Source Files\dlls</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

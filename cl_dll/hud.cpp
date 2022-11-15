@@ -84,6 +84,7 @@ extern cvar_t* sensitivity;
 cvar_t* cl_lw = NULL;
 cvar_t* cl_rollangle = nullptr;
 cvar_t* cl_rollspeed = nullptr;
+cvar_t* MP3Fade = nullptr;
 
 void ShutdownInput();
 
@@ -129,6 +130,11 @@ int __MsgFunc_Weapons(const char* pszName, int iSize, void* pbuf)
 int __MsgFunc_GameMode(const char* pszName, int iSize, void* pbuf)
 {
 	return static_cast<int>(gHUD.MsgFunc_GameMode(pszName, iSize, pbuf));
+}
+
+int __MsgFunc_SoLoud(const char* pszName, int iSize, void* pbuf)
+{
+	return static_cast<int>(gHUD.MsgFunc_SoLoud(pszName, iSize, pbuf));
 }
 
 // TFFree Command Menu
@@ -289,6 +295,7 @@ void CHud::Init()
 	HOOK_MESSAGE(SetFOV);
 	HOOK_MESSAGE(Concuss);
 	HOOK_MESSAGE(Weapons);
+	HOOK_MESSAGE(SoLoud);
 
 	// TFFree CommandMenu
 	HOOK_COMMAND("+commandmenu", OpenCommandMenu);
@@ -332,6 +339,7 @@ void CHud::Init()
 	cl_lw = gEngfuncs.pfnGetCvarPointer("cl_lw");
 	cl_rollangle = CVAR_CREATE("cl_rollangle", "2.0", FCVAR_ARCHIVE);
 	cl_rollspeed = CVAR_CREATE("cl_rollspeed", "200", FCVAR_ARCHIVE);
+	MP3Fade = CVAR_CREATE("MP3Fade", "0.005", 0);
 
 	m_pSpriteList = NULL;
 

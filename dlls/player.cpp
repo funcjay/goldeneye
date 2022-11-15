@@ -572,6 +572,8 @@ bool CBasePlayer::TakeDamage(entvars_t* pevInflictor, entvars_t* pevAttacker, fl
 			SetSuitUpdate("!HEV_HLTH1", false, SUIT_NEXT_IN_10MIN); // health dropping
 	}
 
+	UTIL_ScreenFade(this, Vector(128.0f, 0.0f, 0.0f), 0.25f, 0.0f, 192, FFADE_IN);
+
 	return fTookDamage;
 }
 
@@ -819,6 +821,7 @@ void CBasePlayer::Killed(entvars_t* pevAttacker, int iGib)
 	WRITE_BYTE(0);
 	MESSAGE_END();
 
+	FlashlightTurnOff();
 
 	// UNDONE: Put this in, but add FFADE_PERMANENT and make fade time 8.8 instead of 4.12
 	// UTIL_ScreenFade( edict(), Vector(128,0,0), 6, 15, 255, FFADE_OUT | FFADE_MODULATE );
@@ -2771,6 +2774,8 @@ ReturnSpot:
 	return pSpot->edict();
 }
 
+extern int gmsgSoLoud;
+
 void CBasePlayer::Spawn()
 {
 	m_bIsSpawning = true;
@@ -2826,6 +2831,12 @@ void CBasePlayer::Spawn()
 
 	m_iFlashBattery = 99;
 	m_flFlashLightTime = 1; // force first message
+
+	MESSAGE_BEGIN(MSG_ALL, gmsgSoLoud);
+	WRITE_STRING("stop");
+	WRITE_BYTE(0);
+	WRITE_BYTE(0);
+	MESSAGE_END();
 
 	// dont let uninitialized value here hurt the player
 	m_flFallVelocity = 0;

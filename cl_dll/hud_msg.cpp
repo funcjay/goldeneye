@@ -24,6 +24,8 @@
 #include "particleman.h"
 extern IParticleMan* g_pParticleMan;
 
+#include "CMusicMan.h"
+
 extern BEAM* pBeam;
 extern BEAM* pBeam2;
 extern TEMPENTITY* pFlare; // Vit_amiN
@@ -146,6 +148,19 @@ bool CHud::MsgFunc_Weapons(const char* pszName, int iSize, void* pbuf)
 	const std::uint64_t upperBits = READ_LONG();
 
 	m_iWeaponBits = (lowerBits & 0XFFFFFFFF) | ((upperBits & 0XFFFFFFFF) << 32ULL);
+
+	return true;
+}
+
+bool CHud::MsgFunc_SoLoud(const char* pszName, int iSize, void* pbuf)
+{
+	BEGIN_READ(pbuf, iSize);
+
+	char* musFile = READ_STRING();
+	int loop = READ_BYTE();
+	int fade = READ_BYTE();
+
+	MusicMan_Play(musFile, loop == 0 ? false : true, fade == 0 ? false : true);
 
 	return true;
 }

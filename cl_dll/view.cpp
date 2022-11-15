@@ -20,6 +20,8 @@
 #include "hltv.h"
 #include "Exports.h"
 
+#include "CMusicMan.h"
+
 int CL_IsThirdPerson();
 void CL_CameraOffset(float* ofs);
 
@@ -1651,6 +1653,8 @@ void DLLEXPORT V_CalcRefdef(struct ref_params_s* pparams)
 	}
 #endif
 */
+
+	MusicMan_Paused(pparams->paused != 0 ? true : false);
 }
 
 /*

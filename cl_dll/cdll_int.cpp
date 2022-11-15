@@ -44,6 +44,8 @@ TeamFortressViewport* gViewPort = NULL;
 #include "particleman.h"
 IParticleMan* g_pParticleMan = nullptr;
 
+#include "CMusicMan.h"
+
 void CL_LoadParticleMan();
 void CL_UnloadParticleMan();
 
@@ -240,6 +242,8 @@ void DLLEXPORT HUD_Frame(double time)
 	//	RecClHudFrame(time);
 
 	GetClientVoiceMgr()->Frame(time);
+
+	MusicMan_Update();
 }
 
 

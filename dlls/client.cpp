@@ -492,6 +492,8 @@ ClientCommand
 called each time a player uses a "cmd" command
 ============
 */
+extern int gmsgSoLoud;
+
 // Use CMD_ARGV,  CMD_ARGV, and CMD_ARGC to get pointers the character string command.
 void ClientCommand(edict_t* pEntity)
 {
@@ -583,6 +585,37 @@ void ClientCommand(edict_t* pEntity)
 	{
 		if (player->IsObserver())
 			player->Observer_FindNextPlayer(atoi(CMD_ARGV(1)) != 0);
+	}
+	else if (FStrEq(pcmd, "music_play"))
+	{
+		if (CMD_ARGC() < 2)
+		{
+			ALERT(at_console, "Missing file name in \"music_play\" call\n");
+		}
+		else
+		{
+			MESSAGE_BEGIN(MSG_ALL, gmsgSoLoud);
+			WRITE_STRING((char*)CMD_ARGV(1));
+			WRITE_BYTE(atoi(CMD_ARGV(2)));
+			WRITE_BYTE(0);
+			MESSAGE_END();
+		}
+	}
+	else if (FStrEq(pcmd, "music_stop"))
+	{
+		MESSAGE_BEGIN(MSG_ALL, gmsgSoLoud);
+		WRITE_STRING("stop");
+		WRITE_BYTE(0);
+		WRITE_BYTE(0);
+		MESSAGE_END();
+	}
+	else if (FStrEq(pcmd, "music_fade"))
+	{
+		MESSAGE_BEGIN(MSG_ALL, gmsgSoLoud);
+		WRITE_STRING("stop");
+		WRITE_BYTE(0);
+		WRITE_BYTE(1);
+		MESSAGE_END();
 	}
 	else if (g_pGameRules->ClientCommand(player, pcmd))
 	{

@@ -21,6 +21,8 @@
 #include "vgui_TeamFortressViewport.h"
 #include "filesystem_utils.h"
 
+#include "CMusicMan.h"
+
 
 extern bool g_iAlive;
 
@@ -997,6 +999,8 @@ void InitInput()
 	KB_Init();
 	// Initialize view system
 	V_Init();
+
+	MusicMan_Start();
 }
 
 /*
@@ -1023,4 +1027,6 @@ void DLLEXPORT HUD_Shutdown()
 
 	FileSystem_FreeFileSystem();
 	CL_UnloadParticleMan();
+
+	MusicMan_Shutdown();
 }

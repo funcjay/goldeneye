@@ -128,6 +128,8 @@
     <ClCompile Include="..\..\dlls\bullsquid.cpp" />
     <ClCompile Include="..\..\dlls\buttons.cpp" />
     <ClCompile Include="..\..\dlls\cbase.cpp" />
+    <ClCompile Include="..\..\dlls\CEnvModel.cpp" />
+    <ClCompile Include="..\..\dlls\CEnvMusic.cpp" />
     <ClCompile Include="..\..\dlls\client.cpp" />
     <ClCompile Include="..\..\dlls\combat.cpp" />
     <ClCompile Include="..\..\dlls\controller.cpp" />
@@ -158,8 +160,6 @@
     <ClCompile Include="..\..\dlls\houndeye.cpp" />
     <ClCompile Include="..\..\dlls\h_ai.cpp" />
     <ClCompile Include="..\..\dlls\h_battery.cpp" />
-    <ClCompile Include="..\..\dlls\h_cine.cpp" />
-    <ClCompile Include="..\..\dlls\h_cycler.cpp" />
     <ClCompile Include="..\..\dlls\h_export.cpp" />
     <ClCompile Include="..\..\dlls\ichthyosaur.cpp" />
     <ClCompile Include="..\..\dlls\islave.cpp" />
@@ -200,7 +200,6 @@
     <ClCompile Include="..\..\dlls\subs.cpp" />
     <ClCompile Include="..\..\dlls\talkmonster.cpp" />
     <ClCompile Include="..\..\dlls\teamplay_gamerules.cpp" />
-    <ClCompile Include="..\..\dlls\tempmonster.cpp" />
     <ClCompile Include="..\..\dlls\tentacle.cpp" />
     <ClCompile Include="..\..\dlls\triggers.cpp" />
     <ClCompile Include="..\..\dlls\tripmine.cpp" />
