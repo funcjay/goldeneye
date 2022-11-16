@@ -552,7 +552,8 @@ void CBasePlayerItem::DefaultUse(CBaseEntity* pActivator, CBaseEntity* pCaller, 
 	if (pActivator->AddPlayerItem(this))
 	{
 		AttachToPlayer(pPlayer);
-		EMIT_SOUND(ENT(pPlayer->pev), CHAN_ITEM, "items/gunpickup2.wav", 1, ATTN_NORM);
+		if (!gEvilPlayerEquip)
+			EMIT_SOUND(ENT(pPlayer->pev), CHAN_ITEM, "items/gunpickup2.wav", 1, ATTN_NORM);
 	}
 
 	SUB_UseTargets(pActivator, USE_TOGGLE, 0); // UNDONE: when should this happen?
@@ -748,7 +749,8 @@ bool CBasePlayerWeapon::AddPrimaryAmmo(int iCount, char* szName, int iMaxClip, i
 		{
 			// play the "got ammo" sound only if we gave some ammo to a player that already had this gun.
 			// if the player is just getting this gun for the first time, DefaultUse will play the "picked up gun" sound for us.
-			EMIT_SOUND(ENT(pev), CHAN_ITEM, "items/9mmclip1.wav", 1, ATTN_NORM);
+			if (!gEvilPlayerEquip)
+				EMIT_SOUND(ENT(pev), CHAN_ITEM, "items/9mmclip1.wav", 1, ATTN_NORM);
 		}
 	}
 
@@ -767,7 +769,8 @@ bool CBasePlayerWeapon::AddSecondaryAmmo(int iCount, char* szName, int iMax)
 	if (iIdAmmo > 0)
 	{
 		m_iSecondaryAmmoType = iIdAmmo;
-		EMIT_SOUND(ENT(pev), CHAN_ITEM, "items/9mmclip1.wav", 1, ATTN_NORM);
+		if (!gEvilPlayerEquip)
+			EMIT_SOUND(ENT(pev), CHAN_ITEM, "items/9mmclip1.wav", 1, ATTN_NORM);
 	}
 	return iIdAmmo > 0 ? true : false;
 }
@@ -1190,7 +1193,8 @@ void CWeaponBox::Touch(CBaseEntity* pOther)
 		}
 	}
 
-	EMIT_SOUND(pOther->edict(), CHAN_ITEM, "items/gunpickup2.wav", 1, ATTN_NORM);
+	if (!gEvilPlayerEquip)
+		EMIT_SOUND(pOther->edict(), CHAN_ITEM, "items/gunpickup2.wav", 1, ATTN_NORM);
 	SetUse(NULL);
 	UTIL_Remove(this);
 }

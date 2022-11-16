@@ -523,7 +523,8 @@ class CEgonAmmo : public CBasePlayerAmmo
 	{
 		if (pOther->GiveAmmo(AMMO_URANIUMBOX_GIVE, "uranium", URANIUM_MAX_CARRY) != -1)
 		{
-			EMIT_SOUND(ENT(pev), CHAN_ITEM, "items/9mmclip1.wav", 1, ATTN_NORM);
+			if (!gEvilPlayerEquip)
+				EMIT_SOUND(ENT(pev), CHAN_ITEM, "items/9mmclip1.wav", 1, ATTN_NORM);
 			return true;
 		}
 		return false;

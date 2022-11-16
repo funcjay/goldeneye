@@ -275,7 +275,8 @@ class CP345Ammo : public CBasePlayerAmmo
 	{
 		if (pOther->GiveAmmo(AMMO_P345_GIVE, "9mm", _9MM_MAX_CARRY) != -1)
 		{
-			EMIT_SOUND(ENT(pev), CHAN_ITEM, "items/9mmclip1.wav", VOL_NORM, ATTN_NORM);
+			if (!gEvilPlayerEquip)
+				EMIT_SOUND(ENT(pev), CHAN_ITEM, "items/9mmclip1.wav", VOL_NORM, ATTN_NORM);
 			return true;
 		}
 		return false;

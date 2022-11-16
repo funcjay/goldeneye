@@ -2296,3 +2296,50 @@ void CTriggerCamera::Move()
 	float fraction = 2 * gpGlobals->frametime;
 	pev->velocity = ((pev->movedir * pev->speed) * fraction) + (pev->velocity * (1 - fraction));
 }
+
+
+#define SF_TRIGSOUND_ONCE 0x0008
+
+class CTriggerSound : public CBaseTrigger
+{
+public:
+	void Spawn() override;
+	void EXPORT SoundTouch(CBaseEntity* pOther);
+	bool KeyValue(KeyValueData* pkvd) override;
+};
+LINK_ENTITY_TO_CLASS(trigger_sound, CTriggerSound);
+
+void CTriggerSound::Spawn()
+{
+	InitTrigger();
+	SetTouch(&CTriggerSound::SoundTouch);
+}
+
+void CTriggerSound::SoundTouch(CBaseEntity* pOther)
+{
+	if (!UTIL_IsMasterTriggered(m_sMaster, pOther))
+		return;
+
+	if (!pOther->IsPlayer())
+		return;
+
+	auto pPlayer = static_cast<CBasePlayer*>(pOther);
+	pPlayer->m_SndRoomtype = pev->message;
+
+	if ((pev->spawnflags & SF_TRIGSOUND_ONCE) != 0)
+	{
+		SetTouch(NULL);
+		UTIL_Remove(this);
+	}
+}
+
+bool CTriggerSound::KeyValue(KeyValueData* pkvd)
+{
+	if (FStrEq(pkvd->szKeyName, "roomtype"))
+	{
+		pev->message = atoi(pkvd->szValue);
+		return true;
+	}
+
+	return CBaseTrigger::KeyValue(pkvd);
+}

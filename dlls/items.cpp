@@ -179,18 +179,20 @@ class CItemSuit : public CItem
 	void Precache() override
 	{
 		PRECACHE_MODEL("models/w_suit.mdl");
+		PRECACHE_SOUND("items/suit.wav");
 	}
 	bool MyTouch(CBasePlayer* pPlayer) override
 	{
 		if (pPlayer->HasSuit())
 			return false;
 
-		if (!gEvilImpulse101)
+		if (!gEvilImpulse101 && !gEvilPlayerEquip)
 		{
-			if ((pev->spawnflags & SF_SUIT_SHORTLOGON) != 0)
-				EMIT_SOUND_SUIT(pPlayer->edict(), "!HEV_A0"); // short version of suit logon,
-			else
-				EMIT_SOUND_SUIT(pPlayer->edict(), "!HEV_AAx"); // long version of suit logon
+			//if ((pev->spawnflags & SF_SUIT_SHORTLOGON) != 0)
+			//	EMIT_SOUND_SUIT(pPlayer->edict(), "!HEV_A0"); // short version of suit logon,
+			//else
+			//	EMIT_SOUND_SUIT(pPlayer->edict(), "!HEV_AAx"); // long version of suit logon
+			EMIT_SOUND_DYN(ENT(pev), CHAN_WEAPON, "items/suit.wav", VOL_NORM, ATTN_NORM, 0, PITCH_NORM);
 		}
 
 		pPlayer->SetHasSuit(true);
@@ -231,7 +233,8 @@ class CItemBattery : public CItem
 			pPlayer->pev->armorvalue += gSkillData.batteryCapacity;
 			pPlayer->pev->armorvalue = V_min(pPlayer->pev->armorvalue, MAX_NORMAL_BATTERY);
 
-			EMIT_SOUND(pPlayer->edict(), CHAN_ITEM, "items/gunpickup2.wav", 1, ATTN_NORM);
+			if (!gEvilPlayerEquip)
+				EMIT_SOUND(pPlayer->edict(), CHAN_ITEM, "items/gunpickup2.wav", 1, ATTN_NORM);
 
 			MESSAGE_BEGIN(MSG_ONE, gmsgItemPickup, NULL, pPlayer->pev);
 			WRITE_STRING(STRING(pev->classname));

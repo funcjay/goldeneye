@@ -760,8 +760,9 @@ void CGameCounterSet::Use(CBaseEntity* pActivator, CBaseEntity* pCaller, USE_TYP
 // CGamePlayerEquip / game_playerequip	-- Sets the default player equipment
 // Flag: USE Only
 
-#define SF_PLAYEREQUIP_USEONLY 0x0001
-#define MAX_EQUIP 32
+#define SF_PLAYEREQUIP_USEONLY	0x0001
+#define SF_PLAYEREQUIP_SOUND	0x0002
+#define MAX_EQUIP	32
 
 class CGamePlayerEquip : public CRulePointEntity
 {
@@ -837,7 +838,11 @@ void CGamePlayerEquip::EquipPlayer(CBaseEntity* pEntity)
 			break;
 		for (int j = 0; j < m_weaponCount[i]; j++)
 		{
+			if ((pev->spawnflags & SF_PLAYEREQUIP_SOUND) == 0)
+				gEvilPlayerEquip = true;
 			pPlayer->GiveNamedItem(STRING(m_weaponNames[i]));
+			if ((pev->spawnflags & SF_PLAYEREQUIP_SOUND) == 0)
+				gEvilPlayerEquip = false;
 		}
 	}
 }
