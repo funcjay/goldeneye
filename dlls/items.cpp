@@ -135,6 +135,10 @@ void CItem::ItemUse(CBaseEntity* pActivator, CBaseEntity* pCaller, USE_TYPE useT
 			UTIL_Remove(this);
 		}
 	}
+	else if (gEvilImpulse101)
+	{
+		UTIL_Remove(this);
+	}
 }
 
 CBaseEntity* CItem::Respawn()
@@ -181,10 +185,13 @@ class CItemSuit : public CItem
 		if (pPlayer->HasSuit())
 			return false;
 
-		if ((pev->spawnflags & SF_SUIT_SHORTLOGON) != 0)
-			EMIT_SOUND_SUIT(pPlayer->edict(), "!HEV_A0"); // short version of suit logon,
-		else
-			EMIT_SOUND_SUIT(pPlayer->edict(), "!HEV_AAx"); // long version of suit logon
+		if (!gEvilImpulse101)
+		{
+			if ((pev->spawnflags & SF_SUIT_SHORTLOGON) != 0)
+				EMIT_SOUND_SUIT(pPlayer->edict(), "!HEV_A0"); // short version of suit logon,
+			else
+				EMIT_SOUND_SUIT(pPlayer->edict(), "!HEV_AAx"); // long version of suit logon
+		}
 
 		pPlayer->SetHasSuit(true);
 		return true;

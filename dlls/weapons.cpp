@@ -542,6 +542,10 @@ void CBasePlayerItem::DefaultUse(CBaseEntity* pActivator, CBaseEntity* pCaller, 
 	// can I have this?
 	if (!g_pGameRules->CanHavePlayerItem(pPlayer, this))
 	{
+		if (gEvilImpulse101)
+		{
+			UTIL_Remove(this);
+		}
 		return;
 	}
 
@@ -914,6 +918,13 @@ void CBasePlayerAmmo::DefaultUse(CBaseEntity* pActivator, CBaseEntity* pCaller, 
 			SetThink(&CBasePlayerAmmo::SUB_Remove);
 			pev->nextthink = gpGlobals->time + .1;
 		}
+	}
+	else if (gEvilImpulse101)
+	{
+		// evil impulse 101 hack, kill always
+		SetUse(NULL);
+		SetThink(&CBasePlayerAmmo::SUB_Remove);
+		pev->nextthink = gpGlobals->time + .1;
 	}
 }
 

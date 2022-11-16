@@ -3263,7 +3263,7 @@ void CBasePlayer::GiveNamedItem(const char* szName)
 		return;
 	}
 
-	DispatchTouch(pent, ENT(pev));
+	DispatchUse(pent, ENT(pev));
 }
 
 void CBasePlayer::GiveNamedItem(const char* szName, int defaultAmmo)
@@ -3287,7 +3287,7 @@ void CBasePlayer::GiveNamedItem(const char* szName, int defaultAmmo)
 		weapon->m_iDefaultAmmo = defaultAmmo;
 	}
 
-	DispatchTouch(pent, ENT(pev));
+	DispatchUse(pent, ENT(pev));
 }
 
 bool CBasePlayer::FlashlightIsOn()
@@ -3474,7 +3474,11 @@ void CBasePlayer::CheatImpulseCommands(int iImpulse)
 
 
 	case 101:
-		ALERT(at_console, "Cheater detected, cunny deployed\n");
+		gEvilImpulse101 = true;
+		GiveNamedItem("item_suit");
+		GiveNamedItem("weapon_p345");
+		GiveNamedItem("ammo_p345");
+		gEvilImpulse101 = false;
 		break;
 
 	case 102:
