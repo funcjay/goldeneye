@@ -607,6 +607,8 @@ public:
 	void AddHudElem(CHudBase* p);
 
 	float GetSensitivity();
+
+	int m_iMouseX, m_iMouseY;
 };
 
 extern CHud gHUD;

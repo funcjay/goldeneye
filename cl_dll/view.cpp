@@ -102,106 +102,136 @@ cvar_t v_ipitch_level = {"v_ipitch_level", "0.3", 0, 0.3};
 float v_idlescale; // used by TFC for concussion grenade effect
 
 //=============================================================================
-/*
-void V_NormalizeAngles( Vector& angles )
+
+float SmoothValues(float startValue, float endValue, float speed)
 {
-	int i;
-	// Normalize angles
-	for ( i = 0; i < 3; i++ )
+	float absd, d, finalValue;
+
+	d = endValue - startValue;
+	absd = fabs(d);
+
+	if (absd > 0.01f)
 	{
-		if ( angles[i] > 180.0 )
-		{
-			angles[i] -= 360.0;
-		}
-		else if ( angles[i] < -180.0 )
-		{
-			angles[i] += 360.0;
-		}
+		if (d > 0.0f)
+			finalValue = startValue + (absd * speed);
+		else
+			finalValue = startValue - (absd * speed);
 	}
+	else
+	{
+		finalValue = endValue;
+	}
+	startValue = finalValue;
+
+	return startValue;
 }
-
-/*
-===================
-V_InterpolateAngles
-
-Interpolate Euler angles.
-FIXME:  Use Quaternions to avoid discontinuities
-Frac is 0.0 to 1.0 ( i.e., should probably be clamped, but doesn't have to be )
-===================
-
-void V_InterpolateAngles( float *start, float *end, float *output, float frac )
-{
-	int i;
-	float ang1, ang2;
-	float d;
-	
-	V_NormalizeAngles( start );
-	V_NormalizeAngles( end );
-
-	for ( i = 0 ; i < 3 ; i++ )
-	{
-		ang1 = start[i];
-		ang2 = end[i];
-
-		d = ang2 - ang1;
-		if ( d > 180 )
-		{
-			d -= 360;
-		}
-		else if ( d < -180 )
-		{	
-			d += 360;
-		}
-
-		output[i] = ang1 + d * frac;
-	}
-
-	V_NormalizeAngles( output );
-} */
 
 // Quakeworld bob code, this fixes jitters in the mutliplayer since the clock (pparams->time) isn't quite linear
 float V_CalcBob(struct ref_params_s* pparams)
 {
-	static double bobtime = 0;
-	static float bob = 0;
+	static double bobtime = 0.00f;
+	static float bob = 0.0f;
 	float cycle;
-	static float lasttime = 0;
+	static float lasttime = 0.0f;
 	Vector vel;
 
+	static float bepis;
+	static int step = 0;
 
-	if (pparams->onground == -1 ||
-		pparams->time == lasttime)
-	{
-		// just use old value
+	if (pparams->onground == -1 || pparams->time == lasttime)
 		return bob;
-	}
-
-	lasttime = pparams->time;
-
-	//TODO: bobtime will eventually become a value so large that it will no longer behave properly.
-	//Consider resetting the variable if a level change is detected (pparams->time < lasttime might do the trick).
-	bobtime += pparams->frametime;
-	cycle = bobtime - (int)(bobtime / cl_bobcycle->value) * cl_bobcycle->value;
-	cycle /= cl_bobcycle->value;
-
-	if (cycle < cl_bobup->value)
-	{
-		cycle = M_PI * cycle / cl_bobup->value;
-	}
-	else
-	{
-		cycle = M_PI + M_PI * (cycle - cl_bobup->value) / (1.0 - cl_bobup->value);
-	}
 
 	// bob is proportional to simulated velocity in the xy plane
 	// (don't count Z, or jumping messes it up)
 	VectorCopy(pparams->simvel, vel);
 	vel[2] = 0;
 
-	bob = sqrt(vel[0] * vel[0] + vel[1] * vel[1]) * cl_bob->value;
-	bob = bob * 0.3 + bob * 0.7 * sin(cycle);
-	bob = V_min(bob, 4);
-	bob = V_max(bob, -7);
+	float velbob = sqrt(vel[0] * vel[0] + vel[1] * vel[1]);
+
+	float bobspeed = (velbob * 0.005f);
+
+	if (bobspeed > 1.35f)
+		bobspeed = 1.35f;
+
+	lasttime = pparams->time;
+	bobtime += pparams->frametime * bobspeed;
+
+	if (pparams->onground == 0)
+		bepis = SmoothValues(bepis, 0.0f, pparams->frametime * 5.0f);
+	else
+		bepis = SmoothValues(bepis, velbob, pparams->frametime * 10.0f);
+
+	cycle = bobtime - (int)(bobtime / cl_bobcycle->value) * cl_bobcycle->value;
+	cycle /= cl_bobcycle->value;
+
+	cycle = M_PI + M_PI * (cycle - cl_bobup->value) / (1.0f - cl_bobup->value);
+
+	if (pparams->onground == 0)
+		cycle = 0.0f;
+
+	bob = (bepis * 0.01f) * sin(cycle);
+
+	if (sin(cycle) <= -0.9f && step == 0)
+	{
+		switch (gEngfuncs.pfnRandomLong(0, 3))
+		{
+		case 0: PlaySound("player/pl_step1.wav", 0.33f); break;
+		case 1: PlaySound("player/pl_step2.wav", 0.33f); break;
+		case 2: PlaySound("player/pl_step3.wav", 0.33f); break;
+		case 3: PlaySound("player/pl_step4.wav", 0.33f); break;
+		}
+		step = 1;
+	}
+	else if (sin(cycle) >= 0.0f && step == 1)
+	{
+		step = 0;
+	}
+
+	float value = ((int)(bob * 1.5f + 0.5f)) / 1.5f;
+
+	return bob;
+}
+
+float V_CalcBob2(struct ref_params_s* pparams)
+{
+	static double bobtime;
+	static float bob;
+	float cycle;
+	static float lasttime;
+	Vector vel;
+	static float bepis;
+
+	if (pparams->onground == -1 || pparams->time == lasttime)
+		return bob;
+
+	// bob is proportional to simulated velocity in the xy plane
+	// (don't count Z, or jumping messes it up)
+	VectorCopy(pparams->simvel, vel);
+	vel[2] = 0;
+
+	float velbob = sqrt(vel[0] * vel[0] + vel[1] * vel[1]);
+
+	float bobspeed = (velbob * 0.005f);
+
+	if (bobspeed > 1.35f)
+		bobspeed = 1.35f;
+
+	lasttime = pparams->time;
+	bobtime += pparams->frametime * bobspeed * 0.5f;
+
+	if (pparams->onground == 0)
+		bepis = SmoothValues(bepis, 0.0f, pparams->frametime * 5.0f);
+	else
+		bepis = SmoothValues(bepis, velbob, pparams->frametime * 10.0f);
+
+	cycle = bobtime - (int)(bobtime / cl_bobcycle->value) * cl_bobcycle->value;
+	cycle /= cl_bobcycle->value;
+	cycle = M_PI + M_PI * (cycle - cl_bobup->value) / (1.0f - cl_bobup->value);
+
+	bob = (bepis * 0.01f) * sin(cycle);
+
+	float value = ((int)(bob * 1.5f + 0.5f)) / 1.5f;
+
 	return bob;
 }
 
@@ -492,7 +522,7 @@ void V_CalcNormalRefdef(struct ref_params_s* pparams)
 	cl_entity_t *ent, *view;
 	int i;
 	Vector angles;
-	float bob, waterOffset;
+	float bob, bob2, waterOffset;
 	static viewinterp_t ViewInterp;
 
 	static float oldz = 0;
@@ -519,6 +549,7 @@ void V_CalcNormalRefdef(struct ref_params_s* pparams)
 	// transform the view offset by the model's matrix to get the offset from
 	// model origin for the view
 	bob = V_CalcBob(pparams);
+	bob2 = V_CalcBob2(pparams);
 
 	// refresh position
 	VectorCopy(pparams->simorg, pparams->vieworg);
@@ -653,19 +684,47 @@ void V_CalcNormalRefdef(struct ref_params_s* pparams)
 
 	for (i = 0; i < 3; i++)
 	{
-		view->origin[i] += bob * 0.4 * pparams->forward[i];
+		view->origin[i] += bob2 * 0.29f * pparams->right[i];
+		view->origin[i] += bob * 0.065f * pparams->up[i];
+		view->origin[i] += bob * 0.04f * pparams->forward[i];
 	}
 	view->origin[2] += bob;
+	pparams->viewangles[ROLL] += bob2 * 0.2f;
 
-	// throw in a little tilt.
-	view->angles[YAW] -= bob * 0.5;
-	view->angles[ROLL] -= bob * 1;
-	view->angles[PITCH] -= bob * 0.3;
+	float mouseX = gHUD.m_iMouseX * 0.25f;
+	float mouseY = gHUD.m_iMouseY * 0.25f;
+
+	float frameadj = (1.0f / pparams->frametime) * 0.01f;
+
+	static float lag_x;
+	lag_x = SmoothValues(lag_x, mouseX * frameadj, pparams->frametime * 4.0f);
+	if (lag_x >= 20.0f)
+		lag_x = 20.0f;
+	if (lag_x <= -20.0f)
+		lag_x = -20.0f;
+	view->angles[1] -= lag_x;
+
+	static float lag_y;
+	lag_y = SmoothValues(lag_y, mouseY * frameadj, pparams->frametime * 4.0f);
+	if (lag_y >= 20.0f)
+		lag_y = 20.0f;
+	if (lag_y <= -20.0f)
+		lag_y = -20.0f;
+	view->angles[0] -= lag_y;
+
+	for (int i = 0; i < 3; i++)
+	{
+		view->origin[i] -= 0.2f * lag_x * pparams->right[i];
+		view->origin[i] += 0.2f * lag_y * pparams->up[i];
+	}
 
 	// pushing the view origin down off of the same X/Z plane as the ent's origin will give the
 	// gun a very nice 'shifting' effect when the player looks up/down. If there is a problem
 	// with view model distortion, this may be a cause. (SJB).
-	view->origin[2] -= 1;
+	for (int i = 0; i < 3; i++)
+	{
+		view->origin[i] -= (fabs(pow(view->angles[0] * 0.1f, 3)) * 0.003f) * pparams->forward[i];
+	}
 
 	// fudge position around to keep amount of weapon visible
 	// roughly equal with different FOV
@@ -1701,7 +1760,7 @@ void V_Init()
 	v_centermove = gEngfuncs.pfnRegisterVariable("v_centermove", "0.15", 0);
 	v_centerspeed = gEngfuncs.pfnRegisterVariable("v_centerspeed", "500", 0);
 
-	cl_bobcycle = gEngfuncs.pfnRegisterVariable("cl_bobcycle", "0.8", 0); // best default for my experimental gun wag (sjb)
+	cl_bobcycle = gEngfuncs.pfnRegisterVariable("cl_bobcycle", "0.5", 0); // best default for my experimental gun wag (sjb)
 	cl_bob = gEngfuncs.pfnRegisterVariable("cl_bob", "0.01", 0);		  // best default for my experimental gun wag (sjb)
 	cl_bobup = gEngfuncs.pfnRegisterVariable("cl_bobup", "0.5", 0);
 	cl_waterdist = gEngfuncs.pfnRegisterVariable("cl_waterdist", "4", 0);

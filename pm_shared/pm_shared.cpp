@@ -325,6 +325,7 @@ void PM_PlayStepSound(int step, float fvol)
 	// used to alternate left and right foot
 	// FIXME, move to player state
 
+	/*
 	switch (step)
 	{
 	default:
@@ -516,6 +517,7 @@ void PM_PlayStepSound(int step, float fvol)
 		}
 		break;
 	}
+	*/
 }
 
 int PM_MapTextureTypeStepType(char chTextureType)

@@ -704,9 +704,6 @@ void UTIL_ScreenShake(const Vector& center, float amplitude, float frequency, fl
 	{
 		CBaseEntity* pPlayer = UTIL_PlayerByIndex(i);
 
-		if (!pPlayer || (pPlayer->pev->flags & FL_ONGROUND) == 0) // Don't shake if not onground
-			continue;
-
 		localAmplitude = 0;
 
 		if (radius <= 0)
