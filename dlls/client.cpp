@@ -827,8 +827,6 @@ void ClientPrecache()
 	// setup precaches always needed
 	PRECACHE_SOUND("player/sprayer.wav"); // spray paint sound for PreAlpha
 
-	// PRECACHE_SOUND("player/pl_jumpland2.wav");		// UNDONE: play 2x step sound
-
 	PRECACHE_SOUND("player/pl_fallpain2.wav");
 	PRECACHE_SOUND("player/pl_fallpain3.wav");
 
@@ -937,6 +935,8 @@ void ClientPrecache()
 		UTIL_PrecacheOther("monster_human_grunt");
 
 	PRECACHE_MODEL("sprites/gunsmoke.spr");
+
+	PRECACHE_SOUND("weapons/dryfire.wav");
 }
 
 /*

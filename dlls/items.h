@@ -20,7 +20,9 @@ class CItem : public CBaseEntity
 public:
 	void Spawn() override;
 	CBaseEntity* Respawn() override;
-	void EXPORT ItemTouch(CBaseEntity* pOther);
+	void EXPORT ItemUse(CBaseEntity* pActivator, CBaseEntity* pCaller, USE_TYPE useType, float value);
 	void EXPORT Materialize();
 	virtual bool MyTouch(CBasePlayer* pPlayer) { return false; }
+
+	int ObjectCaps() override { return (CBaseEntity::ObjectCaps() | FCAP_IMPULSE_USE); }
 };

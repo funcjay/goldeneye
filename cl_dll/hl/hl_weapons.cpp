@@ -50,7 +50,7 @@ bool g_irunninggausspred = false;
 Vector previousorigin;
 
 // HLDM Weapon placeholder entities.
-CGlock g_Glock;
+CP345 g_P345;
 CCrowbar g_Crowbar;
 CPython g_Python;
 CMP5 g_Mp5;
@@ -170,8 +170,7 @@ bool CBasePlayerWeapon::DefaultDeploy(const char* szViewModel, const char* szWea
 	SendWeaponAnim(iAnim, body);
 
 	g_irunninggausspred = false;
-	m_pPlayer->m_flNextAttack = 0.5;
-	m_flTimeWeaponIdle = 1.0;
+	m_pPlayer->m_flNextAttack = m_flTimeWeaponIdle = 1.0f;
 	return true;
 }
 
@@ -185,7 +184,7 @@ bool CBasePlayerWeapon::PlayEmptySound()
 {
 	if (m_iPlayEmptySound)
 	{
-		HUD_PlaySound("weapons/357_cock1.wav", 0.8);
+		HUD_PlaySound("weapons/dryfire.wav", 0.8f);
 		m_iPlayEmptySound = false;
 		return false;
 	}
@@ -450,7 +449,7 @@ void HUD_InitClientWeapons()
 	HUD_PrepEntity(&player, NULL);
 
 	// Allocate slot(s) for each weapon that we are going to be predicting
-	HUD_PrepEntity(&g_Glock, &player);
+	HUD_PrepEntity(&g_P345, &player);
 	HUD_PrepEntity(&g_Crowbar, &player);
 	HUD_PrepEntity(&g_Python, &player);
 	HUD_PrepEntity(&g_Mp5, &player);
@@ -536,8 +535,8 @@ void HUD_WeaponsPostThink(local_state_s* from, local_state_s* to, usercmd_t* cmd
 		pWeapon = &g_Crowbar;
 		break;
 
-	case WEAPON_GLOCK:
-		pWeapon = &g_Glock;
+	case WEAPON_P345:
+		pWeapon = &g_P345;
 		break;
 
 	case WEAPON_PYTHON:

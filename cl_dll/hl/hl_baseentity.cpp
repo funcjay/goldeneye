@@ -311,7 +311,7 @@ void CBasePlayerItem::Materialize() {}
 void CBasePlayerItem::AttemptToMaterialize() {}
 void CBasePlayerItem::CheckRespawn() {}
 CBaseEntity* CBasePlayerItem::Respawn() { return NULL; }
-void CBasePlayerItem::DefaultTouch(CBaseEntity* pOther) {}
+void CBasePlayerItem::DefaultUse(CBaseEntity* pActivator, CBaseEntity* pCaller, USE_TYPE useType, float value) {}
 void CBasePlayerItem::DestroyItem() {}
 void CBasePlayerItem::AddToPlayer(CBasePlayer* pPlayer) {}
 void CBasePlayerItem::Drop() {}
@@ -329,7 +329,7 @@ int CBasePlayerWeapon::SecondaryAmmoIndex() { return m_iSecondaryAmmoType; }
 void CBasePlayerAmmo::Spawn() {}
 CBaseEntity* CBasePlayerAmmo::Respawn() { return this; }
 void CBasePlayerAmmo::Materialize() {}
-void CBasePlayerAmmo::DefaultTouch(CBaseEntity* pOther) {}
+void CBasePlayerAmmo::DefaultUse(CBaseEntity* pActivator, CBaseEntity* pCaller, USE_TYPE useType, float value) {}
 bool CBasePlayerWeapon::ExtractAmmo(CBasePlayerWeapon* pWeapon) { return false; }
 bool CBasePlayerWeapon::ExtractClipAmmo(CBasePlayerWeapon* pWeapon) { return false; }
 void CBasePlayerWeapon::RetireWeapon() {}

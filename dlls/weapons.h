@@ -72,7 +72,7 @@ public:
 
 // weapon weight factors (for auto-switching)   (-1 = noswitch)
 #define CROWBAR_WEIGHT 0
-#define GLOCK_WEIGHT 10
+#define P345_WEIGHT 10
 #define PYTHON_WEIGHT 15
 #define MP5_WEIGHT 15
 #define SHOTGUN_WEIGHT 15
@@ -104,11 +104,9 @@ public:
 // the maximum amount of ammo each weapon's clip can hold
 #define WEAPON_NOCLIP -1
 
-//#define CROWBAR_MAX_CLIP		WEAPON_NOCLIP
-#define GLOCK_MAX_CLIP 17
+#define P345_MAX_CLIP 8
 #define PYTHON_MAX_CLIP 6
-#define MP5_MAX_CLIP 50
-#define MP5_DEFAULT_AMMO 25
+#define MP5_MAX_CLIP 30
 #define SHOTGUN_MAX_CLIP 8
 #define CROSSBOW_MAX_CLIP 5
 #define RPG_MAX_CLIP 1
@@ -122,17 +120,16 @@ public:
 
 
 // the default amount of ammo that comes with each gun when it spawns
-#define GLOCK_DEFAULT_GIVE 17
-#define PYTHON_DEFAULT_GIVE 6
-#define MP5_DEFAULT_GIVE 25
-#define MP5_DEFAULT_AMMO 25
+#define P345_DEFAULT_GIVE P345_MAX_CLIP
+#define PYTHON_DEFAULT_GIVE PYTHON_MAX_CLIP
+#define MP5_DEFAULT_GIVE MP5_MAX_CLIP
 #define MP5_M203_DEFAULT_GIVE 0
-#define SHOTGUN_DEFAULT_GIVE 12
-#define CROSSBOW_DEFAULT_GIVE 5
-#define RPG_DEFAULT_GIVE 1
+#define SHOTGUN_DEFAULT_GIVE SHOTGUN_MAX_CLIP
+#define CROSSBOW_DEFAULT_GIVE CROSSBOW_MAX_CLIP
+#define RPG_DEFAULT_GIVE RPG_MAX_CLIP
 #define GAUSS_DEFAULT_GIVE 20
 #define EGON_DEFAULT_GIVE 20
-#define HANDGRENADE_DEFAULT_GIVE 5
+#define HANDGRENADE_DEFAULT_GIVE 1
 #define SATCHEL_DEFAULT_GIVE 1
 #define TRIPMINE_DEFAULT_GIVE 1
 #define SNARK_DEFAULT_GIVE 5
@@ -140,7 +137,7 @@ public:
 
 // The amount of ammo given to a player by an ammo item.
 #define AMMO_URANIUMBOX_GIVE 20
-#define AMMO_GLOCKCLIP_GIVE GLOCK_MAX_CLIP
+#define AMMO_P345_GIVE P345_MAX_CLIP
 #define AMMO_357BOX_GIVE PYTHON_MAX_CLIP
 #define AMMO_MP5CLIP_GIVE MP5_MAX_CLIP
 #define AMMO_CHAINBOX_GIVE 200
@@ -221,7 +218,7 @@ public:
 	virtual void AddToPlayer(CBasePlayer* pPlayer);
 	virtual bool AddDuplicate(CBasePlayerItem* pItem) { return false; } // return true if you want your duplicate removed from world
 	void EXPORT DestroyItem();
-	void EXPORT DefaultTouch(CBaseEntity* pOther); // default weapon touch
+	void EXPORT DefaultUse(CBaseEntity* pActivator, CBaseEntity* pCaller, USE_TYPE useType, float value); // default weapon use
 	void EXPORT FallThink();					   // when an item is first spawned, this think is run to determine when the object has hit the ground.
 	void EXPORT Materialize();					   // make a weapon visible and tangible
 	void EXPORT AttemptToMaterialize();			   // the weapon desires to become visible and tangible, if the game rules allow for it
@@ -283,6 +280,8 @@ public:
 
 	//Hack so deploy animations work when weapon prediction is enabled.
 	bool m_ForceSendAnimations = false;
+
+	int ObjectCaps() override { return CBaseEntity::ObjectCaps() | FCAP_IMPULSE_USE; }
 };
 
 
@@ -373,11 +372,13 @@ class CBasePlayerAmmo : public CBaseEntity
 {
 public:
 	void Spawn() override;
-	void EXPORT DefaultTouch(CBaseEntity* pOther); // default weapon touch
+	void EXPORT DefaultUse(CBaseEntity* pActivator, CBaseEntity* pCaller, USE_TYPE useType, float value); // default weapon use
 	virtual bool AddAmmo(CBaseEntity* pOther) { return true; }
 
 	CBaseEntity* Respawn() override;
 	void EXPORT Materialize();
+
+	int ObjectCaps() override { return CBaseEntity::ObjectCaps() | FCAP_IMPULSE_USE; }
 };
 
 
@@ -475,23 +476,38 @@ bool bIsMultiplayer();
 void LoadVModel(const char* szViewModel, CBasePlayer* m_pPlayer);
 #endif
 
-enum glock_e
+enum p345_e
 {
-	GLOCK_IDLE1 = 0,
-	GLOCK_IDLE2,
-	GLOCK_IDLE3,
-	GLOCK_SHOOT,
-	GLOCK_SHOOT_EMPTY,
-	GLOCK_RELOAD,
-	GLOCK_RELOAD_NOT_EMPTY,
-	GLOCK_DRAW,
-	GLOCK_HOLSTER,
-	GLOCK_ADD_SILENCER
+	P345_DRAW = 0,
+	P345_DRAW_EMPTY,
+	P345_IDLE,
+	P345_IDLE_EMPTY,
+	P345_FIDGET1,
+	P345_FIDGET1_EMPTY,
+	P345_FIDGET2,
+	P345_FIDGET2_EMPTY,
+	P345_FIDGET3,
+	P345_FIDGET3_EMPTY,
+	P345_SHOOT,
+	P345_SHOOT_LAST,
+	P345_DRYFIRE,
+	P345_MELEE,
+	P345_MELEE_EMPTY,
+	P345_RELOAD,
+	P345_RELOAD_EMPTY,
+	P345_HOLSTER,
+	P345_HOLSTER_EMPTY
 };
 
-class CGlock : public CBasePlayerWeapon
+class CP345 : public CBasePlayerWeapon
 {
 public:
+#ifndef CLIENT_DLL
+	bool Save(CSave& save) override;
+	bool Restore(CRestore& restore) override;
+	static TYPEDESCRIPTION m_SaveData[];
+#endif
+
 	void Spawn() override;
 	void Precache() override;
 	int iItemSlot() override { return 2; }
@@ -499,10 +515,12 @@ public:
 
 	void PrimaryAttack() override;
 	void SecondaryAttack() override;
-	void GlockFire(float flSpread, float flCycleTime, bool fUseAutoAim);
+	void EXPORT P345Bash();
 	bool Deploy() override;
+	void Holster() override;
 	void Reload() override;
 	void WeaponIdle() override;
+	void ItemPostFrame() override;
 
 	bool UseDecrement() override
 	{
@@ -516,9 +534,10 @@ public:
 private:
 	int m_iShell;
 
+	float m_flMeleeWait;
 
-	unsigned short m_usFireGlock1;
-	unsigned short m_usFireGlock2;
+	unsigned short m_usP345;
+	unsigned short m_usP345Melee;
 };
 
 enum crowbar_e

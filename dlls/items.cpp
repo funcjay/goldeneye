@@ -92,7 +92,7 @@ void CItem::Spawn()
 	pev->solid = SOLID_TRIGGER;
 	UTIL_SetOrigin(pev, pev->origin);
 	UTIL_SetSize(pev, Vector(-16, -16, 0), Vector(16, 16, 16));
-	SetTouch(&CItem::ItemTouch);
+	SetUse(&CItem::ItemUse);
 
 	if (DROP_TO_FLOOR(ENT(pev)) == 0)
 	{
@@ -102,15 +102,15 @@ void CItem::Spawn()
 	}
 }
 
-void CItem::ItemTouch(CBaseEntity* pOther)
+void CItem::ItemUse(CBaseEntity* pActivator, CBaseEntity* pCaller, USE_TYPE useType, float value)
 {
 	// if it's not a player, ignore
-	if (!pOther->IsPlayer())
+	if (!pActivator->IsPlayer())
 	{
 		return;
 	}
 
-	CBasePlayer* pPlayer = (CBasePlayer*)pOther;
+	CBasePlayer* pPlayer = (CBasePlayer*)pActivator;
 
 	// ok, a player is touching this item, but can he have it?
 	if (!g_pGameRules->CanHaveItem(pPlayer, this))
@@ -121,8 +121,8 @@ void CItem::ItemTouch(CBaseEntity* pOther)
 
 	if (MyTouch(pPlayer))
 	{
-		SUB_UseTargets(pOther, USE_TOGGLE, 0);
-		SetTouch(NULL);
+		SUB_UseTargets(pActivator, USE_TOGGLE, 0);
+		SetUse(NULL);
 
 		// player grabbed the item.
 		g_pGameRules->PlayerGotItem(pPlayer, this);
@@ -135,15 +135,11 @@ void CItem::ItemTouch(CBaseEntity* pOther)
 			UTIL_Remove(this);
 		}
 	}
-	else if (gEvilImpulse101)
-	{
-		UTIL_Remove(this);
-	}
 }
 
 CBaseEntity* CItem::Respawn()
 {
-	SetTouch(NULL);
+	SetUse(NULL);
 	pev->effects |= EF_NODRAW;
 
 	UTIL_SetOrigin(pev, g_pGameRules->VecItemRespawnSpot(this)); // blip to whereever you should respawn.
@@ -163,7 +159,7 @@ void CItem::Materialize()
 		pev->effects |= EF_MUZZLEFLASH;
 	}
 
-	SetTouch(&CItem::ItemTouch);
+	SetUse(&CItem::ItemUse);
 }
 
 #define SF_SUIT_SHORTLOGON 0x0001
