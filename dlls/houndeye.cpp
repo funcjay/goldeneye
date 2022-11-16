@@ -1078,7 +1078,7 @@ Task_t tlHoundCombatFailPVS[] =
 	{
 		{TASK_STOP_MOVING, 0},
 		{TASK_HOUND_THREAT_DISPLAY, 0},
-		{TASK_WAIT_FACE_ENEMY, (float)1},
+		{TASK_WAIT_FACE_ENEMY, (float)0.1f},
 };
 
 Schedule_t slHoundCombatFailPVS[] =
@@ -1097,7 +1097,7 @@ Task_t tlHoundCombatFailNoPVS[] =
 	{
 		{TASK_STOP_MOVING, 0},
 		{TASK_HOUND_THREAT_DISPLAY, 0},
-		{TASK_WAIT_FACE_ENEMY, (float)2},
+		{TASK_WAIT_FACE_ENEMY, (float)0.1f},
 		{TASK_SET_ACTIVITY, (float)ACT_IDLE},
 		{TASK_WAIT_PVS, 0},
 };

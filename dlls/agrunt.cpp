@@ -645,7 +645,7 @@ Task_t tlAGruntFail[] =
 	{
 		{TASK_STOP_MOVING, 0},
 		{TASK_SET_ACTIVITY, (float)ACT_IDLE},
-		{TASK_WAIT, (float)2},
+		{TASK_WAIT, (float)0.1f},
 		{TASK_WAIT_PVS, (float)0},
 };
 
@@ -666,7 +666,7 @@ Task_t tlAGruntCombatFail[] =
 	{
 		{TASK_STOP_MOVING, 0},
 		{TASK_SET_ACTIVITY, (float)ACT_IDLE},
-		{TASK_WAIT_FACE_ENEMY, (float)2},
+		{TASK_WAIT_FACE_ENEMY, (float)0.1f},
 		{TASK_WAIT_PVS, (float)0},
 };
 
@@ -689,7 +689,7 @@ Task_t tlAGruntStandoff[] =
 	{
 		{TASK_STOP_MOVING, (float)0},
 		{TASK_SET_ACTIVITY, (float)ACT_IDLE},
-		{TASK_WAIT_FACE_ENEMY, (float)2},
+		{TASK_WAIT_FACE_ENEMY, (float)0.1f},
 };
 
 Schedule_t slAGruntStandoff[] =

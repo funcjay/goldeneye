@@ -38,8 +38,8 @@ const char* CBreakable::pSpawnObjects[] =
 		NULL,				  // 0
 		"item_battery",		  // 1
 		"item_healthkit",	  // 2
-		"weapon_9mmhandgun",  // 3
-		"ammo_9mmclip",		  // 4
+		"weapon_p345",		  // 3
+		"ammo_p345",		  // 4
 		"weapon_9mmAR",		  // 5
 		"ammo_9mmAR",		  // 6
 		"ammo_ARgrenades",	  // 7

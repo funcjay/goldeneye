@@ -175,10 +175,10 @@ float V_CalcBob(struct ref_params_s* pparams)
 	{
 		switch (gEngfuncs.pfnRandomLong(0, 3))
 		{
-		case 0: PlaySound("player/pl_step1.wav", 0.33f); break;
-		case 1: PlaySound("player/pl_step2.wav", 0.33f); break;
-		case 2: PlaySound("player/pl_step3.wav", 0.33f); break;
-		case 3: PlaySound("player/pl_step4.wav", 0.33f); break;
+		case 0: PlaySound("player/pl_step1.wav", 0.3f); break;
+		case 1: PlaySound("player/pl_step2.wav", 0.3f); break;
+		case 2: PlaySound("player/pl_step3.wav", 0.3f); break;
+		case 3: PlaySound("player/pl_step4.wav", 0.3f); break;
 		}
 		step = 1;
 	}

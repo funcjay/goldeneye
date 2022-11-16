@@ -28,6 +28,7 @@ LINK_ENTITY_TO_CLASS(weapon_p345, CP345);
 
 void CP345::Spawn()
 {
+	pev->classname = MAKE_STRING("weapon_p345");
 	Precache();
 	m_iId = WEAPON_P345;
 	SET_MODEL(ENT(pev), "models/weapons/w_p345.mdl");

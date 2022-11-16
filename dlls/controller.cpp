@@ -458,7 +458,7 @@ Task_t tlControllerFail[] =
 	{
 		{TASK_STOP_MOVING, 0},
 		{TASK_SET_ACTIVITY, (float)ACT_IDLE},
-		{TASK_WAIT, (float)2},
+		{TASK_WAIT, (float)0.1f},
 		{TASK_WAIT_PVS, (float)0},
 };
 

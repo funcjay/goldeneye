@@ -169,7 +169,7 @@ Task_t tlIdleBaStand[] =
 	{
 		{TASK_STOP_MOVING, 0},
 		{TASK_SET_ACTIVITY, (float)ACT_IDLE},
-		{TASK_WAIT, (float)2},			// repick IDLESTAND every two seconds.
+		{TASK_WAIT, (float)0.1f},			// repick IDLESTAND every two seconds.
 		{TASK_TLK_HEADRESET, (float)0}, // reset head position
 };
 

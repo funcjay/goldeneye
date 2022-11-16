@@ -328,7 +328,7 @@ Task_t tlAssassinFail[] =
 	{
 		{TASK_STOP_MOVING, 0},
 		{TASK_SET_ACTIVITY, (float)ACT_IDLE},
-		{TASK_WAIT_FACE_ENEMY, (float)2},
+		{TASK_WAIT_FACE_ENEMY, (float)0.1f},
 		// { TASK_WAIT_PVS,			(float)0		},
 		{TASK_SET_SCHEDULE, (float)SCHED_CHASE_ENEMY},
 };

@@ -296,7 +296,7 @@ char PM_FindTextureType(char* name)
 	return CHAR_TEX_CONCRETE;
 }
 
-void PM_PlayStepSound(int step, float fvol)
+void PM_PlayStepSound(int step, float fvol, bool force = false)
 {
 	static int iSkipStep = 0;
 	int irand;
@@ -325,199 +325,18 @@ void PM_PlayStepSound(int step, float fvol)
 	// used to alternate left and right foot
 	// FIXME, move to player state
 
-	/*
-	switch (step)
+	if (!force)
+		return;
+
+	switch (irand)
 	{
-	default:
-	case STEP_CONCRETE:
-		switch (irand)
-		{
-		// right foot
-		case 0:
-			pmove->PM_PlaySound(CHAN_BODY, "player/pl_step1.wav", fvol, ATTN_NORM, 0, PITCH_NORM);
-			break;
-		case 1:
-			pmove->PM_PlaySound(CHAN_BODY, "player/pl_step3.wav", fvol, ATTN_NORM, 0, PITCH_NORM);
-			break;
-		// left foot
-		case 2:
-			pmove->PM_PlaySound(CHAN_BODY, "player/pl_step2.wav", fvol, ATTN_NORM, 0, PITCH_NORM);
-			break;
-		case 3:
-			pmove->PM_PlaySound(CHAN_BODY, "player/pl_step4.wav", fvol, ATTN_NORM, 0, PITCH_NORM);
-			break;
-		}
-		break;
-	case STEP_METAL:
-		switch (irand)
-		{
-		// right foot
-		case 0:
-			pmove->PM_PlaySound(CHAN_BODY, "player/pl_metal1.wav", fvol, ATTN_NORM, 0, PITCH_NORM);
-			break;
-		case 1:
-			pmove->PM_PlaySound(CHAN_BODY, "player/pl_metal3.wav", fvol, ATTN_NORM, 0, PITCH_NORM);
-			break;
-		// left foot
-		case 2:
-			pmove->PM_PlaySound(CHAN_BODY, "player/pl_metal2.wav", fvol, ATTN_NORM, 0, PITCH_NORM);
-			break;
-		case 3:
-			pmove->PM_PlaySound(CHAN_BODY, "player/pl_metal4.wav", fvol, ATTN_NORM, 0, PITCH_NORM);
-			break;
-		}
-		break;
-	case STEP_DIRT:
-		switch (irand)
-		{
-		// right foot
-		case 0:
-			pmove->PM_PlaySound(CHAN_BODY, "player/pl_dirt1.wav", fvol, ATTN_NORM, 0, PITCH_NORM);
-			break;
-		case 1:
-			pmove->PM_PlaySound(CHAN_BODY, "player/pl_dirt3.wav", fvol, ATTN_NORM, 0, PITCH_NORM);
-			break;
-		// left foot
-		case 2:
-			pmove->PM_PlaySound(CHAN_BODY, "player/pl_dirt2.wav", fvol, ATTN_NORM, 0, PITCH_NORM);
-			break;
-		case 3:
-			pmove->PM_PlaySound(CHAN_BODY, "player/pl_dirt4.wav", fvol, ATTN_NORM, 0, PITCH_NORM);
-			break;
-		}
-		break;
-	case STEP_VENT:
-		switch (irand)
-		{
-		// right foot
-		case 0:
-			pmove->PM_PlaySound(CHAN_BODY, "player/pl_duct1.wav", fvol, ATTN_NORM, 0, PITCH_NORM);
-			break;
-		case 1:
-			pmove->PM_PlaySound(CHAN_BODY, "player/pl_duct3.wav", fvol, ATTN_NORM, 0, PITCH_NORM);
-			break;
-		// left foot
-		case 2:
-			pmove->PM_PlaySound(CHAN_BODY, "player/pl_duct2.wav", fvol, ATTN_NORM, 0, PITCH_NORM);
-			break;
-		case 3:
-			pmove->PM_PlaySound(CHAN_BODY, "player/pl_duct4.wav", fvol, ATTN_NORM, 0, PITCH_NORM);
-			break;
-		}
-		break;
-	case STEP_GRATE:
-		switch (irand)
-		{
-		// right foot
-		case 0:
-			pmove->PM_PlaySound(CHAN_BODY, "player/pl_grate1.wav", fvol, ATTN_NORM, 0, PITCH_NORM);
-			break;
-		case 1:
-			pmove->PM_PlaySound(CHAN_BODY, "player/pl_grate3.wav", fvol, ATTN_NORM, 0, PITCH_NORM);
-			break;
-		// left foot
-		case 2:
-			pmove->PM_PlaySound(CHAN_BODY, "player/pl_grate2.wav", fvol, ATTN_NORM, 0, PITCH_NORM);
-			break;
-		case 3:
-			pmove->PM_PlaySound(CHAN_BODY, "player/pl_grate4.wav", fvol, ATTN_NORM, 0, PITCH_NORM);
-			break;
-		}
-		break;
-	case STEP_TILE:
-		if (0 == pmove->RandomLong(0, 4))
-			irand = 4;
-		switch (irand)
-		{
-		// right foot
-		case 0:
-			pmove->PM_PlaySound(CHAN_BODY, "player/pl_tile1.wav", fvol, ATTN_NORM, 0, PITCH_NORM);
-			break;
-		case 1:
-			pmove->PM_PlaySound(CHAN_BODY, "player/pl_tile3.wav", fvol, ATTN_NORM, 0, PITCH_NORM);
-			break;
-		// left foot
-		case 2:
-			pmove->PM_PlaySound(CHAN_BODY, "player/pl_tile2.wav", fvol, ATTN_NORM, 0, PITCH_NORM);
-			break;
-		case 3:
-			pmove->PM_PlaySound(CHAN_BODY, "player/pl_tile4.wav", fvol, ATTN_NORM, 0, PITCH_NORM);
-			break;
-		case 4:
-			pmove->PM_PlaySound(CHAN_BODY, "player/pl_tile5.wav", fvol, ATTN_NORM, 0, PITCH_NORM);
-			break;
-		}
-		break;
-	case STEP_SLOSH:
-		switch (irand)
-		{
-		// right foot
-		case 0:
-			pmove->PM_PlaySound(CHAN_BODY, "player/pl_slosh1.wav", fvol, ATTN_NORM, 0, PITCH_NORM);
-			break;
-		case 1:
-			pmove->PM_PlaySound(CHAN_BODY, "player/pl_slosh3.wav", fvol, ATTN_NORM, 0, PITCH_NORM);
-			break;
-		// left foot
-		case 2:
-			pmove->PM_PlaySound(CHAN_BODY, "player/pl_slosh2.wav", fvol, ATTN_NORM, 0, PITCH_NORM);
-			break;
-		case 3:
-			pmove->PM_PlaySound(CHAN_BODY, "player/pl_slosh4.wav", fvol, ATTN_NORM, 0, PITCH_NORM);
-			break;
-		}
-		break;
-	case STEP_WADE:
-		if (iSkipStep == 0)
-		{
-			iSkipStep++;
-			break;
-		}
-
-		if (iSkipStep++ == 3)
-		{
-			iSkipStep = 0;
-		}
-
-		switch (irand)
-		{
-		// right foot
-		case 0:
-			pmove->PM_PlaySound(CHAN_BODY, "player/pl_wade1.wav", fvol, ATTN_NORM, 0, PITCH_NORM);
-			break;
-		case 1:
-			pmove->PM_PlaySound(CHAN_BODY, "player/pl_wade2.wav", fvol, ATTN_NORM, 0, PITCH_NORM);
-			break;
-		// left foot
-		case 2:
-			pmove->PM_PlaySound(CHAN_BODY, "player/pl_wade3.wav", fvol, ATTN_NORM, 0, PITCH_NORM);
-			break;
-		case 3:
-			pmove->PM_PlaySound(CHAN_BODY, "player/pl_wade4.wav", fvol, ATTN_NORM, 0, PITCH_NORM);
-			break;
-		}
-		break;
-	case STEP_LADDER:
-		switch (irand)
-		{
-		// right foot
-		case 0:
-			pmove->PM_PlaySound(CHAN_BODY, "player/pl_ladder1.wav", fvol, ATTN_NORM, 0, PITCH_NORM);
-			break;
-		case 1:
-			pmove->PM_PlaySound(CHAN_BODY, "player/pl_ladder3.wav", fvol, ATTN_NORM, 0, PITCH_NORM);
-			break;
-		// left foot
-		case 2:
-			pmove->PM_PlaySound(CHAN_BODY, "player/pl_ladder2.wav", fvol, ATTN_NORM, 0, PITCH_NORM);
-			break;
-		case 3:
-			pmove->PM_PlaySound(CHAN_BODY, "player/pl_ladder4.wav", fvol, ATTN_NORM, 0, PITCH_NORM);
-			break;
-		}
-		break;
+	// right foot
+	case 0: pmove->PM_PlaySound(CHAN_BODY, "player/pl_step1.wav", fvol, ATTN_NORM, 0, PITCH_NORM); break;
+	case 1: pmove->PM_PlaySound(CHAN_BODY, "player/pl_step3.wav", fvol, ATTN_NORM, 0, PITCH_NORM); break;
+	// left foot
+	case 2: pmove->PM_PlaySound(CHAN_BODY, "player/pl_step2.wav", fvol, ATTN_NORM, 0, PITCH_NORM); break;
+	case 3: pmove->PM_PlaySound(CHAN_BODY, "player/pl_step4.wav", fvol, ATTN_NORM, 0, PITCH_NORM); break;
 	}
-	*/
 }
 
 int PM_MapTextureTypeStepType(char chTextureType)
@@ -2652,16 +2471,9 @@ void PM_Jump()
 	// In the air now.
 	pmove->onground = -1;
 
-	PM_PreventMegaBunnyJumping();
+	//PM_PreventMegaBunnyJumping();
 
-	if (tfc)
-	{
-		pmove->PM_PlaySound(CHAN_BODY, "player/plyrjmp8.wav", 0.5, ATTN_NORM, 0, PITCH_NORM);
-	}
-	else
-	{
-		PM_PlayStepSound(PM_MapTextureTypeStepType(pmove->chtexturetype), 1.0);
-	}
+	PM_PlayStepSound(PM_MapTextureTypeStepType(pmove->chtexturetype), VOL_NORM, true);
 
 	// See if user can super long jump?
 	const bool cansuperjump = atoi(pmove->PM_Info_ValueForKey(pmove->physinfo, "slj")) == 1;
@@ -2786,28 +2598,11 @@ void PM_CheckFalling()
 		}
 		else if (pmove->flFallVelocity > PLAYER_MAX_SAFE_FALL_SPEED)
 		{
-			// NOTE:  In the original game dll , there were no breaks after these cases, causing the first one to
-			// cascade into the second
-			//switch ( RandomLong(0,1) )
-			//{
-			//case 0:
-			//pmove->PM_PlaySound( CHAN_VOICE, "player/pl_fallpain2.wav", 1, ATTN_NORM, 0, PITCH_NORM );
-			//break;
-			//case 1:
-			pmove->PM_PlaySound(CHAN_VOICE, "player/pl_fallpain3.wav", 1, ATTN_NORM, 0, PITCH_NORM);
-			//	break;
-			//}
+			pmove->PM_PlaySound(CHAN_VOICE, "player/pl_fallpain3.wav", VOL_NORM, ATTN_NORM, 0, PITCH_NORM);
 			fvol = 1.0;
 		}
 		else if (pmove->flFallVelocity > PLAYER_MAX_SAFE_FALL_SPEED / 2)
 		{
-			const bool tfc = atoi(pmove->PM_Info_ValueForKey(pmove->physinfo, "tfc")) == 1;
-
-			if (tfc)
-			{
-				pmove->PM_PlaySound(CHAN_VOICE, "player/pl_fallpain3.wav", 1, ATTN_NORM, 0, PITCH_NORM);
-			}
-
 			fvol = 0.85;
 		}
 		else if (pmove->flFallVelocity < PLAYER_MIN_BOUNCE_SPEED)
@@ -2823,14 +2618,14 @@ void PM_CheckFalling()
 			PM_UpdateStepSound();
 
 			// play step sound for current texture
-			PM_PlayStepSound(PM_MapTextureTypeStepType(pmove->chtexturetype), fvol);
+			PM_PlayStepSound(PM_MapTextureTypeStepType(pmove->chtexturetype), fvol, true);
 
 			// Knock the screen around a little bit, temporary effect
-			pmove->punchangle[2] = pmove->flFallVelocity * 0.013; // punch z axis
+			pmove->punchangle[0] = pmove->flFallVelocity * 0.013f; // punch z axis
 
-			if (pmove->punchangle[0] > 8)
+			if (pmove->punchangle[0] > 8.0f)
 			{
-				pmove->punchangle[0] = 8;
+				pmove->punchangle[0] = 8.0f;
 			}
 		}
 	}
@@ -2917,8 +2712,8 @@ void PM_DropPunchAngle(Vector& punchangle)
 	float len;
 
 	len = VectorNormalize(punchangle);
-	len -= (10.0 + len * 0.5) * pmove->frametime;
-	len = V_max(len, 0.0);
+	len -= (10.0f + len * 0.5f) * pmove->frametime;
+	len = V_max(len, 0.0f);
 	VectorScale(punchangle, len, punchangle);
 }
 
