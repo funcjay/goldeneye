@@ -168,8 +168,8 @@ void CHudHealth::GetPainColor(int& r, int& g, int& b)
 bool CHudHealth::Draw(float flTime)
 {
 	int r, g, b;
-	int a = 0, x, y;
-	int HealthWidth;
+	int a = 0;	// x, y
+	//int HealthWidth;
 
 	if ((gHUD.m_iHideHUDDisplay & HIDEHUD_HEALTH) != 0 || 0 != gEngfuncs.IsSpectateOnly())
 		return true;
@@ -202,6 +202,7 @@ bool CHudHealth::Draw(float flTime)
 	ScaleColors(r, g, b, a);
 
 	// Only draw health if we have the suit.
+	/*
 	if (gHUD.HasSuit())
 	{
 		HealthWidth = gHUD.GetSpriteRect(gHUD.m_HUD_number_0).right - gHUD.GetSpriteRect(gHUD.m_HUD_number_0).left;
@@ -229,6 +230,7 @@ bool CHudHealth::Draw(float flTime)
 		UnpackRGB(r, g, b, RGB_YELLOWISH);
 		FillRGBA(x, y, iWidth, iHeight, r, g, b, a);
 	}
+	*/
 
 	DrawDamage(flTime);
 	return DrawPain(flTime);

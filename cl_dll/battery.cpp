@@ -76,7 +76,7 @@ bool CHudBattery::Draw(float flTime)
 	if ((gHUD.m_iHideHUDDisplay & HIDEHUD_HEALTH) != 0)
 		return true;
 
-	int r, g, b, x, y, a;
+	int r, g, b;	// x, y, a
 	Rect rc;
 
 	rc = *m_prc2;
@@ -85,6 +85,7 @@ bool CHudBattery::Draw(float flTime)
 
 	UnpackRGB(r, g, b, RGB_YELLOWISH);
 
+	/*
 	if (!gHUD.HasSuit())
 		return true;
 
@@ -132,6 +133,7 @@ bool CHudBattery::Draw(float flTime)
 
 	x += (m_prc1->right - m_prc1->left);
 	x = gHUD.DrawHudNumber(x, y, DHN_3DIGITS | DHN_DRAWZERO, m_iBat, r, g, b);
+	*/
 
 	return true;
 }

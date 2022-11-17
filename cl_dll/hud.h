@@ -480,6 +480,19 @@ private:
 //-----------------------------------------------------
 //
 
+class CimguiHud : public CHudBase
+{
+public:
+	bool Init() override;
+	bool VidInit() override;
+	void Reset() override;
+	bool Draw(float flTime) override;
+};
+
+//
+//-----------------------------------------------------
+//
+
 
 class CHud
 {
@@ -571,6 +584,7 @@ public:
 	CHudAmmoSecondary m_AmmoSecondary;
 	CHudTextMessage m_TextMessage;
 	CHudStatusIcons m_StatusIcons;
+	CimguiHud m_imguiHud;
 
 	void Init();
 	void VidInit();
