@@ -232,7 +232,7 @@ bool CHudHealth::Draw(float flTime)
 	}
 	*/
 
-	DrawDamage(flTime);
+	//DrawDamage(flTime);
 	return DrawPain(flTime);
 }
 
