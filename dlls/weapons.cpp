@@ -118,12 +118,31 @@ void AddMultiDamage(entvars_t* pevInflictor, CBaseEntity* pEntity, float flDamag
 
 /*
 ================
+SpawnBloodStream
+================
+*/
+void SpawnBloodStream(Vector vecSpot, Vector vecDir, int bloodColor)
+{
+	switch (bloodColor)
+	{
+	default: break;
+	case BLOOD_COLOR_RED: UTIL_BloodStream(vecSpot, vecDir, (unsigned short)73, 200); break;
+	case BLOOD_COLOR_GREEN: UTIL_BloodStream(vecSpot, vecDir, bloodColor, 200); break;
+	}
+}
+
+/*
+================
 SpawnBlood
 ================
 */
 void SpawnBlood(Vector vecSpot, int bloodColor, float flDamage)
 {
-	UTIL_BloodDrips(vecSpot, g_vecAttackDir, bloodColor, (int)flDamage);
+	UTIL_BloodDrips(vecSpot, g_vecAttackDir, bloodColor, (int)flDamage * 5);
+
+	// 50% chance for bloodstream
+	if (RANDOM_LONG(0, 1) != 0)
+		SpawnBloodStream(vecSpot, g_vecAttackDir, bloodColor);
 }
 
 

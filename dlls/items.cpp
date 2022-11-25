@@ -290,15 +290,29 @@ class CItemSecurity : public CItem
 	void Spawn() override
 	{
 		Precache();
-		SET_MODEL(ENT(pev), "models/w_security.mdl");
+
+		if (!FStringNull(pev->model))
+			SET_MODEL(ENT(pev), (char*)STRING(pev->model));
+		else
+			SET_MODEL(ENT(pev), "models/w_security.mdl");
+
 		CItem::Spawn();
 	}
 	void Precache() override
 	{
-		PRECACHE_MODEL("models/w_security.mdl");
+		if (!FStringNull(pev->model))
+			PRECACHE_MODEL((char*)STRING(pev->model));
+		else
+			PRECACHE_MODEL("models/w_security.mdl");
+
+		if (!FStringNull(pev->message))
+			PRECACHE_SOUND((char*)STRING(pev->message));
 	}
 	bool MyTouch(CBasePlayer* pPlayer) override
 	{
+		if (!FStringNull(pev->message))
+			EMIT_SOUND(pPlayer->edict(), CHAN_ITEM, (char*)STRING(pev->message), VOL_NORM, ATTN_NORM);
+
 		pPlayer->m_rgItems[ITEM_SECURITY] += 1;
 		return true;
 	}

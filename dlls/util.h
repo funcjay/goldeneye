@@ -566,6 +566,8 @@ void UTIL_UnsetGroupTrace();
 int UTIL_SharedRandomLong(unsigned int seed, int low, int high);
 float UTIL_SharedRandomFloat(unsigned int seed, float low, float high);
 
+bool UTIL_FileExists(const char* filename);
+
 float UTIL_WeaponTimeBase();
 
 CBaseEntity* UTIL_FindEntityForward(CBaseEntity* pMe);

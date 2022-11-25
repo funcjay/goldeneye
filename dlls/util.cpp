@@ -31,6 +31,21 @@
 #include "weapons.h"
 #include "gamerules.h"
 #include "UserMessages.h"
+#include <sys/stat.h>
+
+bool UTIL_FileExists(const char* filename)
+{
+	char bufDir[16];
+	GET_GAME_DIR(bufDir);
+	char bufFile[64];
+	snprintf(bufFile, sizeof(bufFile), "%s\\%s", bufDir, filename);
+
+	struct stat checkfile;
+	if (0 > stat(bufFile, &checkfile))
+		return false;
+
+	return true;
+}
 
 float UTIL_WeaponTimeBase()
 {

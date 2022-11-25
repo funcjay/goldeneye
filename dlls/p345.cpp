@@ -235,7 +235,7 @@ void CP345::WeaponIdle()
 	if (m_flTimeWeaponIdle > UTIL_WeaponTimeBase())
 		return;
 
-	switch (RANDOM_LONG(0, 8))
+	switch (RANDOM_LONG(0, 6))
 	{
 	default:
 		SendWeaponAnim(m_iClip != 0 ? P345_IDLE : P345_IDLE_EMPTY);

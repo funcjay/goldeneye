@@ -2343,3 +2343,43 @@ bool CTriggerSound::KeyValue(KeyValueData* pkvd)
 
 	return CBaseTrigger::KeyValue(pkvd);
 }
+
+
+class CTriggerMap : public CBaseDelay
+{
+public:
+	void Spawn() override;
+	void Use(CBaseEntity* pActivator, CBaseEntity* pCaller, USE_TYPE useType, float value) override;
+
+	int ObjectCaps() override { return CBaseDelay::ObjectCaps() & ~FCAP_ACROSS_TRANSITION; }
+};
+LINK_ENTITY_TO_CLASS(trigger_map, CTriggerMap);
+
+void CTriggerMap::Spawn() {}
+
+void CTriggerMap::Use(CBaseEntity* pActivator, CBaseEntity* pCaller, USE_TYPE useType, float value)
+{
+	if (FStringNull(pev->message))
+	{
+		ALERT(at_console, "trigger_map: no map specified!\n");
+		SetUse(NULL);
+		UTIL_Remove(this);
+		return;
+	}
+
+	char mapCheck[64];
+	snprintf(mapCheck, sizeof(mapCheck) - 1, "maps\\%s.bsp", STRING(pev->message));
+
+	if (!UTIL_FileExists(mapCheck))
+	{
+		ALERT(at_console, "trigger_map: map %s doesn't exist!\n", mapCheck);
+		SetUse(NULL);
+		UTIL_Remove(this);
+		return;
+	}
+
+	char tempCmd[72];
+	snprintf(tempCmd, sizeof(tempCmd) - 1, "changelevel %s\n", STRING(pev->message));
+
+	SERVER_COMMAND(tempCmd);
+}
